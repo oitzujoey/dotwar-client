@@ -54,8 +54,7 @@
           (half-window-height (/ *window-height* 2.0))
           (scaling-factor (/ 1.0 max-displacement)))
       (let ((x (* (+ (* (elt point 0) scaling-factor half-window-width) half-window-width) *window-usage-fraction*))
-            (y (* (+ (* (elt point 1) scaling-factor half-window-height) half-window-height) *window-usage-fraction*))
-            (z (* (elt point 2) scaling-factor (/ (+ half-window-width half-window-height) 2.0))))
+            (y (* (+ (* (elt point 1) scaling-factor half-window-height) half-window-height) *window-usage-fraction*)))
         (vector x
                 y)))))
 
@@ -74,17 +73,7 @@
     (let* ((3d-position (slot-value entity 'position))
            (2d-position (project-3d-to-2d 3d-position max-displacement))
            (3d-velocity (slot-value entity 'velocity))
-           (2d-velocity (project-3d-to-2d (map 'vector
-                                               #'+
-                                               3d-position
-                                               3d-velocity)
-                                          max-displacement))
            (3d-acceleration (slot-value entity 'acceleration))
-           (2d-acceleration (project-3d-to-2d (map 'vector
-                                               #'+
-                                               3d-position
-                                               3d-acceleration)
-                                              max-displacement))
            (half-time (/ time 2))
            (3d-mid-point (v+ 3d-position
                              (v* 3d-velocity (scalar-to-vector3 half-time))))

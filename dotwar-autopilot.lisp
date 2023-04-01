@@ -197,7 +197,6 @@
           (target-velocity (gethash "v" target-entity))
           (target-acceleration (gethash "a" target-entity))
           (my-velocity (gethash "v" my-entity))
-          (my-acceleration (gethash "a" my-entity))
           acceleration
           (time 0))
       (loop for i to (1- 1000)
@@ -219,7 +218,6 @@
           (target-velocity (gethash "v" target-entity))
           (target-acceleration (gethash "a" target-entity))
           (my-velocity (gethash "v" my-entity))
-          (my-acceleration (gethash "a" my-entity))
           acceleration
           (time 0))
       (loop for i to (1- 1000)
@@ -240,8 +238,7 @@
           (target-position (gethash "r" target-entity))
           (target-velocity (gethash "v" target-entity))
           (target-acceleration (gethash "a" target-entity))
-          (my-velocity (gethash "v" my-entity))
-          (my-acceleration (gethash "a" my-entity)))
+          (my-velocity (gethash "v" my-entity)))
       (let* ((my-target-acceleration (calculate-acceleration my-velocity
                                                              my-position
                                                              target-acceleration
