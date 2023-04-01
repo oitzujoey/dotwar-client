@@ -1,14 +1,9 @@
 
 (in-package #:dotwar-client)
 
-(defparameter *server* "http://dotwar.pythonanywhere.com")
-(defparameter *game* "TESTGAME")
 (defparameter *retries* 2)
 (defparameter *retries-delay* 3)
-(defparameter *authcode* "d0eb0f5c-ae7b-4cd5-974e-d32a83c4931e")
 (defparameter *post-send-sleep* 1)
-(defparameter *max-acceleration* 1.6e7)
-(defparameter *max-speed* 1079251200)
 (defparameter *distance-epsilon* 1.0e6)
 
 ;; Um...

@@ -9,8 +9,9 @@
                #:sketch
                #:alexandria)
   :components ((:file "package")
+               (:file "settings" :depends-on ("package"))
                (:file "vector" :depends-on ("package"))
                (:file "reference" :depends-on ("package"))
                (:file "matrix" :depends-on ("package"))
-               (:file "dotwar-autopilot" :depends-on ("vector" "reference" "matrix"))
-               (:file "dotwar-client" :depends-on ("package" "vector"))))
+               (:file "dotwar-autopilot" :depends-on ("vector" "reference" "matrix" "settings"))
+               (:file "dotwar-client" :depends-on ("package" "vector" "settings"))))

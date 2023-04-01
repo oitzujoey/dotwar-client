@@ -2,16 +2,10 @@
 (in-package #:dotwar-client)
 
 
-(defparameter *server* "http://dotwar.pythonanywhere.com")
-(defparameter *game* "TESTGAME")
-(defparameter *retries* 2)
-(defparameter *retries-delay* 3)
-(defparameter *post-send-sleep* 1)
 (defparameter *window-size* 800)
 (defparameter *window-width* *window-size*)
 (defparameter *window-height* *window-size*)
 (defparameter *window-usage-fraction* 0.99)
-(defparameter *my-ship* "My Quintessence")
 
 (defvar *orientation* #(1 0 0 0))
 (defparameter *scale* 1.0)
@@ -122,6 +116,7 @@
         event-entities
         defender-scan-entities
         attacker-scan-entities
+        earth-entity
         my-ship)
     (loop for event across (receive-log)
           do (when (equal (gethash "type" event) "burn")
@@ -133,16 +128,16 @@
             do (let ((entity (make-entity (gethash "r" json-entity) (gethash "v" json-entity) (gethash "a" json-entity))))
                  (if (equal *my-ship* (gethash "name" json-entity))
                      (setf my-ship entity)
-                     (if (= 0 (gethash "team" json-entity))
-                         (push entity defender-scan-entities)
-                         (push entity attacker-scan-entities)))
+                     (ccase (gethash "team" json-entity)
+                         (0 (push entity defender-scan-entities))
+                         (1 (push entity attacker-scan-entities))
+                         (-1 (setf earth-entity entity))))
                  (push entity all-scan-entities)
                  (push entity all-entities))))
     (let ((max-displacement (apply #'max
                                    (mapcar (lambda (e)
                                              (apply #'max (map 'list (lambda (a) (abs a)) (slot-value e 'position))))
-                                           all-entities)))
-          (earth (make-entity #(0 0 0) #(0 0 0) #(0 0 0))))
+                                           all-entities))))
 
       ;; Plot
       (defsketch system ((title *game*)
@@ -151,7 +146,8 @@
         (background +black+)
         (loop for entity in event-entities
               do (draw-entity entity +blue+ 0.2 max-displacement))
-        (draw-entity earth +white+ 0.4 max-displacement)
+        (when earth-entity
+          (draw-entity earth-entity +white+ 0.4 max-displacement))
         (loop for entity in all-scan-entities
               do (draw-entity-slot entity 'velocity 24 +red+ max-displacement))
         (loop for entity in all-scan-entities
@@ -162,7 +158,8 @@
               do (draw-entity entity +red+ 0.4 max-displacement))
         (loop for entity in defender-scan-entities
               do (draw-entity entity +yellow+ 0.4 max-displacement))
-        (draw-entity my-ship +green+ 0.4 max-displacement))))
+        (when my-ship
+          (draw-entity my-ship +green+ 0.4 max-displacement)))))
   
   (defmethod kit.sdl2:mousemotion-event :after ((window system) time-stamp mask x y xr yr)
     (flet ((left-mouse-button-clicked-p ()
